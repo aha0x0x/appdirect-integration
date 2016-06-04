@@ -1,7 +1,7 @@
 package org.aha.webservice.appdirect.subscription;
 
 import java.util.UUID;
-import org.aha.webservice.appdirect.Creator;
+import org.aha.webservice.appdirect.User;
 import org.aha.webservice.appdirect.EventType;
 import org.aha.webservice.appdirect.Flag;
 import org.aha.webservice.appdirect.Notification;
@@ -41,8 +41,8 @@ public class SubscriptionServiceImpl implements SubscriptionService
                 return new SuccessResponse();
             }
             
-            Creator creator = notification.getCreator();
-            if( mUsersDAO.doesUserExist( creator.getEmail() ) )
+            User creator = notification.getCreator();
+            if( mUsersDAO.userExists( creator.getEmail() ) )
             {
                 return new ErrorResponse( ErrorResponse.ErrorCode.USER_ALREADY_EXISTS, "user already exists" );
             }
@@ -58,8 +58,7 @@ public class SubscriptionServiceImpl implements SubscriptionService
         }
         catch( Exception e )
         {
-            System.out.println( e );
-            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to add user" );
+            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, e.toString() );
         }
         
     }
@@ -92,14 +91,12 @@ public class SubscriptionServiceImpl implements SubscriptionService
             {
                 return new SuccessResponse();
             }
-            else
-            {
-                return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to update" );
-            }
+            
+            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to update" );
         }
         catch( Exception e )
         {
-            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to update" );
+            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, e.toString() );
         }
     }
 
@@ -126,12 +123,12 @@ public class SubscriptionServiceImpl implements SubscriptionService
                 return new SuccessResponse();
             }
             
-            return new ErrorResponse();
+            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to cancel" );
             
         }
         catch( Exception e )
         {
-            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to cancel" );
+            return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, e.toString() );
         }
     }
     
@@ -170,21 +167,13 @@ public class SubscriptionServiceImpl implements SubscriptionService
                     {
                         return new SuccessResponse();
                     }
-                    return new ErrorResponse();
                 }
             }
+            return new ErrorResponse(ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to change" );
         }
         catch( Exception e )
         {
-            System.out.println();
-            return new ErrorResponse();
+            return new ErrorResponse(ErrorResponse.ErrorCode.UNKNOWN_ERROR, e.toString() );
         }
-        return new ErrorResponse();
     }
-    
-    
-
-
-    
-
 }

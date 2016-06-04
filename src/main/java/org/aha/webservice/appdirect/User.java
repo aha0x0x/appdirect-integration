@@ -17,7 +17,7 @@ import java.util.Objects;
     "openId",
     "uuid"
 })
-public class Creator
+public class User
 {
     @JsonProperty("address")
     private Address address;
@@ -209,7 +209,7 @@ public class Creator
         {
             return false;
         }
-        final Creator other = (Creator) obj;
+        final User other = (User) obj;
         if ( !Objects.equals( this.email, other.email ) )
         {
             return false;

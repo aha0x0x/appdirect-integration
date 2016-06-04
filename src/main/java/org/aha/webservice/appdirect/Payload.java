@@ -11,6 +11,7 @@ import java.util.Objects;
     "company",
     "order",
     "account",
+    "user",
     "notice"
 })
 
@@ -28,6 +29,9 @@ public class Payload
     
     @JsonProperty("notice")
     private Notice notice;
+    
+    @JsonProperty("user")
+    private User user;
     
     
     /**
@@ -92,6 +96,27 @@ public class Payload
         this.account = account;
     }
     
+    
+    /**
+     *
+     * @return The Account
+     */
+    @JsonProperty("user")
+    public User getUser()
+    {
+        return user;
+    }
+
+    /**
+     *
+     * @param account The Account
+     */
+    @JsonProperty("user")
+    public void setUser( User user )
+    {
+        this.user = user;
+    }
+        
     /**
      *
      * @return The notice

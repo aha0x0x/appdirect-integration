@@ -22,7 +22,7 @@ public class UsersDAO
      * @param email
      * @return 
      */
-    public boolean doesUserExist( String email ) throws SQLException
+    public boolean userExists( String email ) throws SQLException
     {
         String sql = "SELECT EXISTS ( SELECT 1 FROM " + USERS_TABLE 
                       + " WHERE " + DbSchema.UsersTable.EMAIL_COLUMN +" = ?  )";
@@ -45,13 +45,40 @@ public class UsersDAO
         }
     }
     
+    /**
+     * 
+     * @param email
+     * @return 
+     */
+    public boolean userExists( UUID  id ) throws SQLException
+    {
+        String sql = "SELECT EXISTS ( SELECT 1 FROM " + USERS_TABLE 
+                      + " WHERE " + DbSchema.UsersTable.ID_COLUMN +" = ?  )";
+        
+        PreparedStatement pstmt = null;
+        try 
+        {
+            pstmt = mDs.getConnection().prepareStatement( sql );
+            pstmt.setObject( 1, id );
+            
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        }
+        finally 
+        {
+            if ( pstmt != null ) 
+            {
+                pstmt.close();
+            }
+        }
+    }
     
     /**
      * 
      * @return
      * @throws SQLException 
      */
-    public void createUser( UUID id, String email, String firstname, String lastname ) throws SQLException
+    public boolean createUser( UUID id, String email, String firstname, String lastname ) throws SQLException
     {
         
         String sql = "INSERT INTO " + USERS_TABLE  
@@ -71,7 +98,8 @@ public class UsersDAO
             pstmt.setString( 3, firstname );
             pstmt.setString( 4, lastname );
 
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
+            return rows > 0;
             
         }
         finally 
@@ -82,4 +110,31 @@ public class UsersDAO
             }
         }
     }
+    
+    public boolean deleteUser( UUID id, String email ) throws SQLException
+    {
+        String sql = "DELETE from " + USERS_TABLE 
+                     + " WHERE id = ? "
+                     + " AND " + DbSchema.UsersTable.EMAIL_COLUMN + " = ? "; 
+        
+        PreparedStatement pstmt = null;
+        try 
+        {
+            pstmt = mDs.getConnection().prepareStatement( sql );
+            pstmt.setObject( 1, id );
+            pstmt.setString( 2, email );
+            
+            int rows = pstmt.executeUpdate();
+            return rows > 0 ;
+        }
+        finally 
+        {
+            if ( pstmt != null ) 
+            {
+                pstmt.close();
+            }
+        }
+    }
+    
+    
 }

@@ -28,7 +28,7 @@ public class Notification
     private Flag flag; 
     
     @JsonProperty("creator")
-    private Creator creator;
+    private User creator;
 
     @JsonProperty("payload")
     private Payload payload;
@@ -98,7 +98,7 @@ public class Notification
      * @return The creator
      */
     @JsonProperty("creator")
-    public Creator getCreator()
+    public User getCreator()
     {
         return creator;
     }
@@ -108,7 +108,7 @@ public class Notification
      * @param creator The creator
      */
     @JsonProperty("creator")
-    public void setCreator( Creator creator )
+    public void setCreator( User creator )
     {
         this.creator = creator;
     }
