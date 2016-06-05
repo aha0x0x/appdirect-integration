@@ -7,6 +7,7 @@ import org.aha.webservice.appdirect.Flag;
 import org.aha.webservice.appdirect.Notification;
 import org.aha.webservice.appdirect.NotificationFetcher;
 import org.aha.webservice.appdirect.User;
+import org.aha.webservice.appdirect.ds.SubscriptionDAO;
 import org.aha.webservice.appdirect.ds.UsersDAO;
 import org.aha.webservice.appdirect.subscription.ErrorResponse;
 import org.aha.webservice.appdirect.subscription.Response;
@@ -19,12 +20,20 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService
 {
 
+    @Autowired 
+    SubscriptionDAO mSubscriptionDAO;
+    
     @Autowired
     UsersDAO mUsersDAO;
     
     @Autowired 
     NotificationFetcher mFetcher;
     
+    /**
+     * Assigns a new user to a given subscription id 
+     * @param eventUrl
+     * @return success if user is created else failure
+     */
     @Override
     public Response assignUser( String eventUrl )
     {
@@ -41,17 +50,22 @@ public class UserServiceImpl implements UserService
                 return new SuccessResponse();
             }
             
+            Account account = notification.getPayload().getAccount();
+            UUID id = UUID.fromString( account.getAccountIdentifier() );
+            if( !mSubscriptionDAO.subscriptionExists( id ) )
+            {
+                return new ErrorResponse( ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND, "account not found " );
+            }
+            
+            
             User user = notification.getPayload().getUser();
             if( mUsersDAO.userExists( user.getEmail() ) )
             {
                 return new ErrorResponse( ErrorResponse.ErrorCode.USER_ALREADY_EXISTS, "user already exists" );
             }
             
-            Account account = notification.getPayload().getAccount();
-            
-            mUsersDAO.createUser( UUID.fromString( account.getAccountIdentifier() ), user.getEmail(), user.getFirstName(), user.getLastName() );
-            
-            return new SuccessResponse();
+            mUsersDAO.createUser( id, user.getEmail(), user.getFirstName(), user.getLastName() );
+            return new SuccessResponse( id.toString() );
             
         }
         catch( Exception e )
@@ -62,6 +76,12 @@ public class UserServiceImpl implements UserService
         
     }
 
+    
+    /**
+     * Unassigns and deletes a user given a subscription id
+     * @param eventUrl
+     * @return success if user is deleted else false. 
+     */
     @Override
     public Response unassignUser( String eventUrl )
     {
@@ -82,12 +102,19 @@ public class UserServiceImpl implements UserService
             UUID id  = UUID.fromString( notification.getPayload().getAccount().getAccountIdentifier() );
             User user = notification.getPayload().getUser();
             
-            if( mUsersDAO.deleteUser( id, user.getEmail() ) )
+            if( !mUsersDAO.userExists( id, user.getEmail() ) )
             {
-                return new SuccessResponse( id.toString() );
+                return new ErrorResponse( ErrorResponse.ErrorCode.USER_NOT_FOUND, "user not found" );
             }
             
-            return new ErrorResponse();
+            if( mUsersDAO.deleteUser( id, user.getEmail() ) )
+            
+            if( mUsersDAO.deleteUser( UUID.fromString( "9268ceae-5309-4bdd-a88b-04eeadc2210e" ), "john.doe@yahoo.com" ) )
+            {
+                return new SuccessResponse();
+            }
+            
+            return new ErrorResponse(ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to remove user" );
             
         }
         catch( Exception e )

@@ -25,6 +25,11 @@ public class SubscriptionServiceImpl implements SubscriptionService
     @Autowired
     UsersDAO mUsersDAO;
     
+    /**
+     * creates a new subscription 
+     * @param eventUrl
+     * @return success if a subscription is created else failure
+     */
     @Override
     public Response create( String eventUrl )
     {
@@ -63,6 +68,11 @@ public class SubscriptionServiceImpl implements SubscriptionService
         
     }
 
+    /**
+     * changes an existing subscription 
+     * @param eventUrl
+     * @return success if an existing subscription was updated else failure
+     */
     @Override
     public Response change( String eventUrl )
     {
@@ -100,6 +110,11 @@ public class SubscriptionServiceImpl implements SubscriptionService
         }
     }
 
+    /**
+     * cancels an existing subscription 
+     * @param eventUrl
+     * @return 
+     */
     @Override
     public Response cancel( String eventUrl )
     {
@@ -115,12 +130,17 @@ public class SubscriptionServiceImpl implements SubscriptionService
             {
                 return new SuccessResponse();
             }
-            
-            
+
             UUID id = UUID.fromString( notification.getPayload().getAccount().getAccountIdentifier() );
+            if( !mSubscriptionDAO.subscriptionExists( id ) )
+            {
+                return new ErrorResponse( ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND, "subscription not found" );
+            }
+            
+            
             if( mSubscriptionDAO.delete( id ) )
             {
-                return new SuccessResponse();
+                return new SuccessResponse( );
             }
             
             return new ErrorResponse( ErrorResponse.ErrorCode.UNKNOWN_ERROR, "failed to cancel" );
@@ -133,6 +153,11 @@ public class SubscriptionServiceImpl implements SubscriptionService
     }
     
     
+    /**
+     * change subscription notice 
+     * @param eventUrl
+     * @return success if subscription updated else false
+     */
     @Override
     public Response notice( String eventUrl )
     {
@@ -149,8 +174,13 @@ public class SubscriptionServiceImpl implements SubscriptionService
                 return new SuccessResponse();
             }
 
-            
             UUID id = UUID.fromString( notification.getPayload().getAccount().getAccountIdentifier() );
+            
+            if( !mSubscriptionDAO.subscriptionExists( id ) )
+            {
+                return new ErrorResponse( ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND, "subscription not found" );
+            }
+            
             switch( notification.getPayload().getNotice() )
             {
                 case CLOSED:

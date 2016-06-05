@@ -25,19 +25,4 @@ public class AccessController
     {
         return mUserService.unassignUser( eventUrl );
     }
-    
-    @RequestMapping("update")
-    public Response update( @RequestParam(value="url") String eventUrl ) 
-    {
-        return mUserService.updateUser(eventUrl );
-    }
-    
-    
-    
-
-    
-    
-    
-    
-    
 }
