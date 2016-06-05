@@ -23,5 +23,8 @@ assign: access/assign
 
 unassign: access/unassign
 
+This is currently hosted at https://appdirect-int-test.herokuapp.com/
+I am still testing oAuthClient. Tested the persistant layer with mocked data. 
+
 
 
