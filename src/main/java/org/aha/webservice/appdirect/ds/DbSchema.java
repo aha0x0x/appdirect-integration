@@ -1,6 +1,6 @@
 package org.aha.webservice.appdirect.ds;
 
-public class DbSchema 
+    public class DbSchema 
 {
     public static String NAME = "appdirect";
     
