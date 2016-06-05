@@ -1,5 +1,4 @@
-    package org.aha.webservice.appdirect.ds.maintenance;
-
+package org.aha.webservice.appdirect.ds.maintenance;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,8 +68,7 @@ public class PgMaintenanace implements DbMaintenance
          *  id uuid primary key default uuid_generate_v4(),
          *  company varchar not null,
          *  edition varchar not null,
-         *  status  varchar, 
-         *  marketplace varchar not null );
+         * notice varchar,
          */
         StringBuilder builder = new StringBuilder();
         builder.append( "create table ").append( DbSchema.NAME ).append( "." ).append( DbSchema.SubscriptionTable.NAME );
@@ -78,7 +76,7 @@ public class PgMaintenanace implements DbMaintenance
                 .append( DbSchema.SubscriptionTable.ID_COLUMN ).append( " UUID primary key default gen_random_uuid(),\n ")
                 .append( DbSchema.SubscriptionTable.COMPANY_COLUMN ).append( " varchar not null,\n ")
                 .append( DbSchema.SubscriptionTable.EDITION_COLUMN ).append( " varchar not null,\n ")
-                .append(DbSchema.SubscriptionTable.MARKETPLACE_COLUMN ).append( " varchar not null ").append( ");");
+                .append(DbSchema.SubscriptionTable.NOTICE_COLUMN ).append( " varchar ").append( ");");
         return builder.toString();
     }
 
@@ -89,7 +87,6 @@ public class PgMaintenanace implements DbMaintenance
          * create table appdirect.users  (
          *  id uuid references subscription (id ),\n 
          *  email varchar not null,
-         *  openid varchar,
          *  first_name varchar, 
          *  last_name varchar )
          */
@@ -98,7 +95,6 @@ public class PgMaintenanace implements DbMaintenance
         builder.append( " ( ")
             .append( DbSchema.UsersTable.ID_COLUMN ).append( " UUID REFERENCES " ).append( DbSchema.SubscriptionTable.NAME ).append( "(").append( DbSchema.SubscriptionTable.ID_COLUMN ).append( ") ON DELETE CASCADE,\n");
         builder.append( DbSchema.UsersTable.EMAIL_COLUMN ).append( " varchar not null,\n ");
-        builder.append( DbSchema.UsersTable.OPENID_COLUMN ).append( "varchar,\n ");
         builder.append( DbSchema.UsersTable.FIRSTNAME_COLUMN ).append( "varchar,\n");
         builder.append( DbSchema.UsersTable.LASTNAME_COLUMN ).append( "varchar,\n");
         builder.append( ")");

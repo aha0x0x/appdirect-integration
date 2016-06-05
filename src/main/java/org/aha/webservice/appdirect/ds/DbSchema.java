@@ -10,7 +10,6 @@ public class DbSchema
 
         public static String ID_COLUMN          = "id";
         public static String EMAIL_COLUMN       = "email";
-        public static String OPENID_COLUMN      = "open_id";
         public static String FIRSTNAME_COLUMN   = "first_name";
         public static String LASTNAME_COLUMN    = "last_name";
     }
@@ -24,11 +23,6 @@ public class DbSchema
         public static String ID_COLUMN              = "id";
         public static String COMPANY_COLUMN         = "company";
         public static String EDITION_COLUMN         = "edition";
-        public static String STATUS_COLUMN          = "status";
         public static String NOTICE_COLUMN          = "notice";
-        public static String MARKETPLACE_COLUMN     = "marketplace";
-        
-        
-        
     }
 }

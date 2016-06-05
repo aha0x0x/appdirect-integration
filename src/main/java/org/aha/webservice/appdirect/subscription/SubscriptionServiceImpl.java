@@ -53,13 +53,12 @@ public class SubscriptionServiceImpl implements SubscriptionService
             }
 
             
-            UUID uuid = mSubscriptionDAO.create(  notification.getPayload().getCompany().getName(), 
-                                                  notification.getPayload().getOrder().getEditionCode(),
-                                                  notification.getMarketplace().getBaseUrl() );
+            UUID id = mSubscriptionDAO.create(  notification.getPayload().getCompany().getName(), 
+                                                  notification.getPayload().getOrder().getEditionCode() );
             
             
-            mUsersDAO.createUser( uuid, creator.getEmail(), creator.getFirstName(), creator.getLastName() );
-            return new SuccessResponse( uuid.toString() );
+            mUsersDAO.createUser( id, creator.getEmail(), creator.getFirstName(), creator.getLastName() );
+            return new SuccessResponse( id.toString() );
         }
         catch( Exception e )
         {
