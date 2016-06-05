@@ -8,13 +8,19 @@ org.aha.webservice.appdirect.ds.DbSchema and org.
 aha.webservice.appdirect.ds.maintenance.PgMaintenanace )
 
 Relative urls for subscription events:
+
 create: subscription/create
+
 change: subscription/change
+
 cancel: subscription/cancel
+
 notice: subscription/notice
 
 Relative urls for user access events:
+
 assign: access/assign
+
 unassign: access/unassign
 
 
